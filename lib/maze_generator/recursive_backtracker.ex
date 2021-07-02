@@ -6,6 +6,11 @@ defmodule MazeGenerator.RecursiveBacktracker do
   alias MazeGenerator.{Cell, Grid, Utils}
   @behaviour MazeGenerator.Generator
 
+  @doc """
+  Carves a maze in the grid passed using the Recursive Backtracker algorithm
+  and stores the results in the grid's borders element in the form of passages
+  and walls.
+  """
   @spec carve(Grid.t()) :: Grid.t()
   def carve(
         %Grid{
