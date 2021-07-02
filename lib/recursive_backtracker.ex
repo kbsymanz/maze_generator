@@ -1,2 +1,0 @@
-defmodule MazeGenerator.RecursiveBacktracker do
-end
