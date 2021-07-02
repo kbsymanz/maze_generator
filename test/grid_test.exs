@@ -49,6 +49,14 @@ defmodule MazeGeneratorTest.Grid do
       assert Enum.all?(Map.values(new_grid.borders[:v]), fn x -> x == :wall end)
     end
 
+    test "opening a passage when both cells are in the same has no effect", %{grid: grid} do
+      cell = Map.get(grid.cells, {2, 2}, nil)
+      new_grid = Grid.open_passage(grid, cell, cell)
+
+      assert Enum.all?(Map.values(new_grid.borders[:h]), fn x -> x == :wall end)
+      assert Enum.all?(Map.values(new_grid.borders[:v]), fn x -> x == :wall end)
+    end
+
     test "can open a passage when cells are horizontal neighbors", %{grid: grid} do
       new_grid =
         Grid.open_passage(

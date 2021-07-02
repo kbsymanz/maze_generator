@@ -44,7 +44,7 @@ defmodule MazeGenerator.Grid do
 
   @doc """
   Opens a passage in the border between two adjacent cells. If the
-  cells are not adjacent, it does nothing.
+  cells are not adjacent or is the same cell, it does nothing.
   """
   @spec open_passage(Grid.t(), Cell.t(), Cell.t()) :: Grid.t()
   def open_passage(grid, %Cell{} = one, %Cell{x: x2, y: y2} = two) do
