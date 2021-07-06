@@ -22,7 +22,8 @@ defmodule MazeGenerator.MixProject do
   defp deps do
     [
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:struct_access, "~> 1.1.2"}
+      {:struct_access, "~> 1.1.2"},
+      {:benchee, "~> 1.0", only: :dev}
     ]
   end
 end
