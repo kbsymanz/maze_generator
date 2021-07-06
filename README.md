@@ -1,21 +1,23 @@
 # MazeGenerator
 
-**Generate mazes.**
+A maze generation library in Elixir.
 
-## Installation
+![Example 50 x 30 maze](maze_example.png)
+*An example 50 x 30 maze.*
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `maze_generator` to your list of dependencies in `mix.exs`:
+## Features
 
-```elixir
-def deps do
-  [
-    {:maze_generator, "~> 0.1.0"}
-  ]
-end
-```
+- Generates a maze of specified width and height (in cells) using the
+  Recursive Backtracker algorithm.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/maze_generator](https://hexdocs.pm/maze_generator).
+## Upcoming Features
 
+- Example Liveview application that uses the library and outputs SVG.
+- Solver that creates an ingress and egress in the maze between various
+priorities such as longest path, shortest path between specified sides, etc.
+- Different algorithms such as Wilson's, Hunt and Kill, etc.
+
+## Credits
+
+- Thank you to Jamis Buck and his book, "Mazes for Programmers: Code Your Own
+  Twisty Little Passages", for the recursive backtracker algorithm.
