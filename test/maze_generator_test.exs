@@ -3,7 +3,6 @@ defmodule MazeGeneratorTest do
   doctest MazeGenerator
 
   alias MazeGenerator, as: Mg
-  alias MazeGenerator.Grid
 
   describe "Generating a maze using algorithms" do
     test "Generate a maze using the default algorithm" do
@@ -32,5 +31,4 @@ defmodule MazeGeneratorTest do
       assert elem(result, 0) == :error
     end
   end
-
 end

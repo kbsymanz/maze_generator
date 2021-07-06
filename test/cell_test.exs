@@ -36,7 +36,7 @@ defmodule MazeGeneratorTest.Cell do
   end
 
   test "Cell visited can be set to true using defaults for set_visited" do
-    cell = Cell.new(2, 2) |> Cell.set_visited
+    cell = Cell.new(2, 2) |> Cell.set_visited()
 
     assert cell.visited == true
   end

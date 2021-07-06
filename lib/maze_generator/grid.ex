@@ -1,6 +1,6 @@
 defmodule MazeGenerator.Grid do
   alias __MODULE__
-  alias MazeGenerator.{Cell, Utils}
+  alias MazeGenerator.Cell
   use StructAccess
 
   @moduledoc """
@@ -46,27 +46,17 @@ defmodule MazeGenerator.Grid do
   Opens a passage in the border between two adjacent cells. If the
   cells are not adjacent or is the same cell, it does nothing.
   """
-  @spec open_passage(Grid.t(), Cell.t(), Cell.t()) :: Grid.t()
-  def open_passage(grid, %Cell{} = one, %Cell{x: x2, y: y2} = two) do
-    neighbors_of_one = Utils.neighbors(grid, one)
-
+  @spec open_passage(Grid.t(), {pos_integer, pos_integer}, {pos_integer, pos_integer}) :: Grid.t()
+  def open_passage(grid, {x1, y1} = one, {x2, y2} = two) do
     new_grid =
-      case Map.has_key?(neighbors_of_one, {x2, y2}) do
-        true ->
-          case horizontal_or_vertical(one, two) do
-            :h ->
-              put_in(grid, [:borders, :h, {x2, y2}], :passage)
+      case horizontal_or_vertical(one, two) do
+        :h ->
+          put_in(grid, [:borders, :h, {x2, max(y1, y2)}], :passage)
 
-            :v ->
-              put_in(grid, [:borders, :v, {x2, y2}], :passage)
+        :v ->
+          put_in(grid, [:borders, :v, {max(x1, x2), y2}], :passage)
 
-            nil ->
-              # is it better to throw here since we know we should never get here?
-              grid
-          end
-
-        false ->
-          # The cells are not neighbors, so they have no border wall between them.
+        nil ->
           grid
       end
 
@@ -76,10 +66,10 @@ defmodule MazeGenerator.Grid do
   @doc """
   Sets a cell in the grid to visited, defaulting to true.
   """
-  @spec set_visited(Grid.t(), Cell.t(), value :: boolean | atom) :: Grid.t()
-  def set_visited(grid, cell, value \\ true)
+  @spec set_visited(Grid.t(), {pos_integer, pos_integer}, value :: boolean | atom) :: Grid.t()
+  def set_visited(grid, coordinates, value \\ true)
 
-  def set_visited(%Grid{} = grid, %Cell{x: x, y: y} = _cell, value) do
+  def set_visited(%Grid{} = grid, {x, y} = _coordinates, value) do
     visited_cell =
       grid
       |> get_in([:cells, {x, y}])
@@ -88,12 +78,12 @@ defmodule MazeGenerator.Grid do
     put_in(grid, [:cells, {x, y}], visited_cell)
   end
 
-  defp horizontal_or_vertical(%Cell{x: x1, y: y1}, %Cell{x: x2, y: y2}) do
+  defp horizontal_or_vertical({x1, y1}, {x2, y2}) do
     cond do
-      x1 == x2 ->
+      x1 == x2 && abs(y1 - y2) == 1 ->
         :h
 
-      y1 == y2 ->
+      y1 == y2 && abs(x1 - x2) == 1 ->
         :v
 
       true ->

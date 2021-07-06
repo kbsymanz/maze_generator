@@ -3,7 +3,7 @@ defmodule MazeGenerator.RecursiveBacktracker do
   Implements the Recursive Backtracker algorithm.
   """
 
-  alias MazeGenerator.{Cell, Grid, Utils}
+  alias MazeGenerator.{Grid, Utils, VisitTracker}
   @behaviour MazeGenerator.Generator
 
   @doc """
@@ -21,29 +21,38 @@ defmodule MazeGenerator.RecursiveBacktracker do
           paths: _paths
         } = grid
       ) do
-    starting_cell = get_random_cell(grid, width, height)
+    {:ok, visit_tracker} = VisitTracker.start_link()
+    starting_coordinate = get_random_coordinate(width, height)
 
-    carvep(grid, starting_cell, starting_cell)
+    grid = carvep(grid, visit_tracker, starting_coordinate, starting_coordinate)
+    VisitTracker.stop_link(visit_tracker)
+
+    grid
   end
 
-  defp get_random_cell(grid, width, height) do
-    get_in(grid, [:cells, {Enum.random(0..(width - 1)), Enum.random(0..(height - 1))}])
+  defp get_random_coordinate(width, height) do
+    {Enum.random(0..(width - 1)), Enum.random(0..(height - 1))}
   end
 
-  defp carvep(grid, %Cell{visited: curr_cell_visited} = _curr_cell, _last_cell)
-       when curr_cell_visited == true,
-       do: grid
+  defp carvep(
+         grid,
+         visit_tracker,
+         {_curr_x, _curr_y} = curr_coordinate,
+         {_last_x, _last_y} = last_coordinate
+       ) do
+    case VisitTracker.get_visited(visit_tracker, curr_coordinate) do
+      true ->
+        grid
 
-  defp carvep(grid, %Cell{} = curr_cell, %Cell{} = last_cell) do
-    new_grid =
-      grid
-      |> Grid.open_passage(curr_cell, last_cell)
-      |> Grid.set_visited(curr_cell)
+      _ ->
+        VisitTracker.set_visited(visit_tracker, curr_coordinate)
+        new_grid = Grid.open_passage(grid, curr_coordinate, last_coordinate)
 
-    neighbors = Utils.neighbors(new_grid, curr_cell)
+        neighbors = Utils.neighbors(new_grid, curr_coordinate) |> Enum.shuffle()
 
-    Enum.reduce(Map.values(neighbors), new_grid, fn cell, the_grid ->
-      carvep(the_grid, cell, curr_cell)
-    end)
+        Enum.reduce(neighbors, new_grid, fn next_coordinate, the_grid ->
+          carvep(the_grid, visit_tracker, next_coordinate, curr_coordinate)
+        end)
+    end
   end
 end

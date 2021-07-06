@@ -1,7 +1,6 @@
 defmodule MazeGeneratorTest.Grid do
   use ExUnit.Case
   alias MazeGenerator.Grid
-  import ExUnit.CaptureIO
 
   test "Create a grid with populated cells and borders" do
     w = 3
@@ -38,45 +37,35 @@ defmodule MazeGeneratorTest.Grid do
     end
 
     test "cannot open a passage when cells are not neighbors", %{grid: grid} do
-      new_grid =
-        Grid.open_passage(
-          grid,
-          Map.get(grid.cells, {4, 4}, :one),
-          Map.get(grid.cells, {7, 7}, :two)
-        )
+      new_grid = Grid.open_passage(grid, {4, 4}, {7, 7})
 
       assert Enum.all?(Map.values(new_grid.borders[:h]), fn x -> x == :wall end)
       assert Enum.all?(Map.values(new_grid.borders[:v]), fn x -> x == :wall end)
     end
 
     test "opening a passage when both cells are in the same has no effect", %{grid: grid} do
-      cell = Map.get(grid.cells, {2, 2}, nil)
-      new_grid = Grid.open_passage(grid, cell, cell)
+      new_grid = Grid.open_passage(grid, {2, 2}, {2, 2})
 
       assert Enum.all?(Map.values(new_grid.borders[:h]), fn x -> x == :wall end)
       assert Enum.all?(Map.values(new_grid.borders[:v]), fn x -> x == :wall end)
     end
 
     test "can open a passage when cells are horizontal neighbors", %{grid: grid} do
-      new_grid =
-        Grid.open_passage(
-          grid,
-          Map.get(grid.cells, {0, 0}, :one),
-          Map.get(grid.cells, {1, 0}, :two)
-        )
+      new_grid = Grid.open_passage(grid, {0, 0}, {1, 0})
 
       assert get_in(new_grid, [:borders, :v, {1, 0}]) == :passage
     end
 
     test "can open a passage when cells are vertical neighbors", %{grid: grid} do
-      new_grid =
-        Grid.open_passage(
-          grid,
-          Map.get(grid.cells, {0, 0}, :one),
-          Map.get(grid.cells, {0, 1}, :two)
-        )
+      new_grid = Grid.open_passage(grid, {0, 0}, {0, 1})
 
       assert get_in(new_grid, [:borders, :h, {0, 1}]) == :passage
+    end
+
+    test "opening a passage between the same cell has no effect", %{grid: grid} do
+      new_grid = Grid.open_passage(grid, {1, 1}, {1, 1})
+
+      assert grid.borders === new_grid.borders
     end
   end
 
@@ -86,15 +75,13 @@ defmodule MazeGeneratorTest.Grid do
     end
 
     test "a cell can be marked as visited with default value of false", %{grid: grid} do
-      cell = grid.cells[{2, 2}]
-      new_grid = Grid.set_visited(grid, cell)
+      new_grid = Grid.set_visited(grid, {2, 2})
 
       assert new_grid.cells[{2, 2}].visited == true
     end
 
     test "a cell can be marked as visited with an atom", %{grid: grid} do
-      cell = grid.cells[{2, 2}]
-      new_grid = Grid.set_visited(grid, cell, :any_atom)
+      new_grid = Grid.set_visited(grid, {2, 2}, :any_atom)
 
       assert new_grid.cells[{2, 2}].visited == :any_atom
     end

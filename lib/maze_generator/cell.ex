@@ -54,6 +54,7 @@ defmodule MazeGenerator.Cell do
   """
   @spec set_visited(Cell.t(), value :: boolean | atom) :: Cell.t()
   def set_visited(cell, value \\ true)
+
   def set_visited(%Cell{} = cell, visited) do
     %{cell | visited: visited}
   end
