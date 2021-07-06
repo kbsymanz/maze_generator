@@ -15,10 +15,7 @@ defmodule MazeGenerator.RecursiveBacktracker do
   def carve(
         %Grid{
           width: width,
-          height: height,
-          cells: _cells,
-          borders: _borders,
-          paths: _paths
+          height: height
         } = grid
       ) do
     {:ok, visit_tracker} = VisitTracker.start_link()

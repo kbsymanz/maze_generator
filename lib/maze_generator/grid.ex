@@ -8,10 +8,10 @@ defmodule MazeGenerator.Grid do
   The cells are a map of cells with an {x, y} tuple key representing the cell location.
 
   The borders are horizontal and vertical borders that represent the borders between
-  cells, which are shared by cells, which employs an {:h | :v, x, y} tuple key.
-  Horizontal borders (:h) are those whose bars lie horizontal and are the separators
-  between vertically aligned cells. Vertical borders (:v) are those whose bars lie
-  vertical and are the separators between horizontally aligned cells.
+  cells, which are shared by cells, stored as an {x, y} tuple in the :borders map under
+  :h and :v keys. Horizontal borders (:h) are those whose bars lie horizontal and are 
+  the separators between vertically aligned cells. Vertical borders (:v) are those 
+  whose bars lie vertical and are the separators between horizontally aligned cells.
   """
 
   @type state :: :valid | :uninitialized | :invalid_width_height | :no_paths
@@ -31,7 +31,7 @@ defmodule MazeGenerator.Grid do
 
   @doc """
   Creates a new Grid of the specified dimensions. Initializes the borders as walls
-  and sets the state to invalid since the path has not been carved.
+  and sets the state to :uninitialized since the path has not been carved.
   """
   def new(width, height)
       when is_integer(width) and width > 1 and is_integer(height) and height > 1 do
