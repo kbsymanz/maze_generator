@@ -30,10 +30,5 @@ defmodule MazeGenerator do
 
   def new(_width, _height, _algorithm), do: {:error, "Invalid algorithm specified."}
 
-  # TODO:
-  # 3. Add algorithms.
-  # 4. Add means to add ingress and egress for the longest path through the maze.
-  # 5. Add means to add ingress and egress for the shortest path through the maze.
-
   defp carve(grid, :recursive_backtracker), do: RecursiveBacktracker.carve(grid)
 end

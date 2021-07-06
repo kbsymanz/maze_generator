@@ -10,10 +10,9 @@ defmodule MazeGenerator.Cell do
   e: east wall, x/y coordinates
   s: south wall, x/y coordinates
   w: west wall, x/y coordinates
-  visited: whether the cell has been visited, either boolean or atom depending on algorithm
   """
 
-  @enforce_keys [:x, :y, :n, :e, :s, :w, :visited]
+  @enforce_keys [:x, :y, :n, :e, :s, :w]
 
   @type t :: %__MODULE__{
           x: pos_integer,
@@ -21,11 +20,10 @@ defmodule MazeGenerator.Cell do
           n: {pos_integer, pos_integer},
           e: {pos_integer, pos_integer},
           s: {pos_integer, pos_integer},
-          w: {pos_integer, pos_integer},
-          visited: boolean | atom
+          w: {pos_integer, pos_integer}
         }
 
-  defstruct ~w( x y n e s w visited )a
+  defstruct ~w( x y n e s w )a
 
   @doc """
   Creates a new Cell at the specified position with borders references set.
@@ -37,8 +35,7 @@ defmodule MazeGenerator.Cell do
       n: {x, y},
       e: {x + 1, y},
       s: {x, y + 1},
-      w: {x, y},
-      visited: false
+      w: {x, y}
     }
   end
 
@@ -47,15 +44,5 @@ defmodule MazeGenerator.Cell do
   """
   def equal(%Cell{x: x1, y: y1}, %Cell{x: x2, y: y2}) do
     x1 == x2 && y1 == y2
-  end
-
-  @doc """
-  Sets the visited value of a cell, defaults to true.
-  """
-  @spec set_visited(Cell.t(), value :: boolean | atom) :: Cell.t()
-  def set_visited(cell, value \\ true)
-
-  def set_visited(%Cell{} = cell, visited) do
-    %{cell | visited: visited}
   end
 end

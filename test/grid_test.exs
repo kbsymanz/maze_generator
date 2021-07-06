@@ -68,22 +68,4 @@ defmodule MazeGeneratorTest.Grid do
       assert grid.borders === new_grid.borders
     end
   end
-
-  describe "Setting cells as visited" do
-    setup do
-      {:ok, grid: Grid.new(10, 10)}
-    end
-
-    test "a cell can be marked as visited with default value of false", %{grid: grid} do
-      new_grid = Grid.set_visited(grid, {2, 2})
-
-      assert new_grid.cells[{2, 2}].visited == true
-    end
-
-    test "a cell can be marked as visited with an atom", %{grid: grid} do
-      new_grid = Grid.set_visited(grid, {2, 2}, :any_atom)
-
-      assert new_grid.cells[{2, 2}].visited == :any_atom
-    end
-  end
 end

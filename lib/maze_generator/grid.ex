@@ -44,7 +44,7 @@ defmodule MazeGenerator.Grid do
 
   @doc """
   Opens a passage in the border between two adjacent cells. If the
-  cells are not adjacent or is the same cell, it does nothing.
+  cells are not adjacent or are the same cell, it does nothing.
   """
   @spec open_passage(Grid.t(), {pos_integer, pos_integer}, {pos_integer, pos_integer}) :: Grid.t()
   def open_passage(grid, {x1, y1} = one, {x2, y2} = two) do
@@ -61,21 +61,6 @@ defmodule MazeGenerator.Grid do
       end
 
     new_grid
-  end
-
-  @doc """
-  Sets a cell in the grid to visited, defaulting to true.
-  """
-  @spec set_visited(Grid.t(), {pos_integer, pos_integer}, value :: boolean | atom) :: Grid.t()
-  def set_visited(grid, coordinates, value \\ true)
-
-  def set_visited(%Grid{} = grid, {x, y} = _coordinates, value) do
-    visited_cell =
-      grid
-      |> get_in([:cells, {x, y}])
-      |> Cell.set_visited(value)
-
-    put_in(grid, [:cells, {x, y}], visited_cell)
   end
 
   defp horizontal_or_vertical({x1, y1}, {x2, y2}) do

@@ -28,22 +28,4 @@ defmodule MazeGeneratorTest.Cell do
     refute Cell.equal(cell1, cell2)
     refute Cell.equal(cell1, cell3)
   end
-
-  test "Cell initial value for visited is false" do
-    cell = Cell.new(3, 3)
-
-    assert cell.visited == false
-  end
-
-  test "Cell visited can be set to true using defaults for set_visited" do
-    cell = Cell.new(2, 2) |> Cell.set_visited()
-
-    assert cell.visited == true
-  end
-
-  test "Cell visited can be set to an atom" do
-    cell = Cell.new(4, 5) |> Cell.set_visited(:any_atom)
-
-    assert cell.visited == :any_atom
-  end
 end
