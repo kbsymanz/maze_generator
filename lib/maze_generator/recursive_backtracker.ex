@@ -3,7 +3,7 @@ defmodule MazeGenerator.RecursiveBacktracker do
   Implements the Recursive Backtracker algorithm.
   """
 
-  alias MazeGenerator.{Grid, Utils, VisitTracker}
+  alias MazeGenerator.{Grid, Utils}
   @behaviour MazeGenerator.Generator
 
   @doc """
@@ -18,11 +18,9 @@ defmodule MazeGenerator.RecursiveBacktracker do
           height: height
         } = grid
       ) do
-    {:ok, visit_tracker} = VisitTracker.start_link()
     starting_coordinate = get_random_coordinate(width, height)
 
-    grid = carvep(grid, visit_tracker, starting_coordinate, starting_coordinate)
-    VisitTracker.stop_link(visit_tracker)
+    %{grid: grid} = carvep(grid, %{}, starting_coordinate, starting_coordinate)
 
     grid
   end
@@ -33,23 +31,32 @@ defmodule MazeGenerator.RecursiveBacktracker do
 
   defp carvep(
          grid,
-         visit_tracker,
+         visited,
          {_curr_x, _curr_y} = curr_coordinate,
          {_last_x, _last_y} = last_coordinate
        ) do
-    case VisitTracker.get_visited(visit_tracker, curr_coordinate) do
+    case Map.has_key?(visited, curr_coordinate) do
       true ->
-        grid
+        %{grid: grid, visited: visited}
 
       _ ->
-        VisitTracker.set_visited(visit_tracker, curr_coordinate)
+        new_visited = Map.put_new(visited, curr_coordinate, true)
+
         new_grid = Grid.open_passage(grid, curr_coordinate, last_coordinate)
 
         neighbors = Utils.neighbors(new_grid, curr_coordinate) |> Enum.shuffle()
 
-        Enum.reduce(neighbors, new_grid, fn next_coordinate, the_grid ->
-          carvep(the_grid, visit_tracker, next_coordinate, curr_coordinate)
-        end)
+        Enum.reduce(
+          neighbors,
+          %{grid: new_grid, visited: new_visited},
+          fn next_coordinate,
+             %{
+               grid: the_grid,
+               visited: the_visited
+             } ->
+            carvep(the_grid, the_visited, next_coordinate, curr_coordinate)
+          end
+        )
     end
   end
 end
