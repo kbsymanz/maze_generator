@@ -22,7 +22,7 @@ defmodule MazeGenerator.RecursiveBacktracker do
 
     %{grid: grid} = carvep(grid, %{}, starting_coordinate, starting_coordinate)
 
-    grid
+    Grid.record_algorithm(grid, :recursive_backtracker)
   end
 
   defp get_random_coordinate(width, height) do

@@ -16,5 +16,12 @@ defmodule RecursiveBacktrackerTest do
       assert cnt_v_passages > 0
       assert cnt_h_passages > 0
     end
+
+    test "verify that the meta information is set", %{grid: grid} do
+      new_grid = RB.carve(grid)
+
+      assert get_in(new_grid, [:meta, :generated, :algorithm]) === :recursive_backtracker
+      assert get_in(new_grid, [:meta, :generated, :timestamp]) !== nil
+    end
   end
 end

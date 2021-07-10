@@ -31,6 +31,27 @@ defmodule MazeGeneratorTest.Grid do
     assert Grid.new(1, -1).state == :invalid_width_height
   end
 
+  describe "can record the algorithm" do
+    test "a new grid has meta data structure set up" do
+      grid = Grid.new(10, 10)
+
+      assert Map.has_key?(grid, :meta)
+      assert Map.has_key?(grid.meta, :generated)
+      assert Map.has_key?(grid.meta.generated, :algorithm)
+      assert Map.has_key?(grid.meta.generated, :timestamp)
+      assert get_in(grid, [:meta, :generated, :algorithm]) === nil
+      assert get_in(grid, [:meta, :generated, :timestamp]) === nil
+    end
+
+    test "can set the algorithm name and timestamp is set" do
+      grid = Grid.new(10, 10)
+             |> Grid.record_algorithm(:testing)
+
+      assert grid.meta.generated.algorithm === :testing
+      assert grid.meta.generated.timestamp !== nil
+    end
+  end
+
   describe "opening and closing passages" do
     setup do
       {:ok, grid: Grid.new(10, 10)}

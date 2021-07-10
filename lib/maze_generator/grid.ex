@@ -22,12 +22,13 @@ defmodule MazeGenerator.Grid do
           cells: map(),
           borders: map,
           paths: map(),
-          state: state
+          state: state,
+          meta: map()
         }
 
-  @enforce_keys [:width, :height, :cells, :borders, :paths, :state]
+  @enforce_keys [:width, :height, :cells, :borders, :paths, :state, :meta]
 
-  defstruct [:width, :height, :cells, :borders, :paths, :state]
+  defstruct [:width, :height, :cells, :borders, :paths, :state, :meta]
 
   @doc """
   Creates a new Grid of the specified dimensions. Initializes the borders as walls
@@ -63,6 +64,17 @@ defmodule MazeGenerator.Grid do
     new_grid
   end
 
+  @doc """
+  Records the algorithm specified in the meta section of the grid along with
+  the date and time.
+  """
+  @spec record_algorithm(Grid.t(), Atom.t()) :: Grid.t()
+  def record_algorithm(grid, algorithm) when is_atom(algorithm) do
+    grid
+    |> put_in([:meta, :generated, :algorithm], algorithm)
+    |> put_in([:meta, :generated, :timestamp], DateTime.utc_now())
+  end
+
   defp horizontal_or_vertical({x1, y1}, {x2, y2}) do
     cond do
       x1 == x2 && abs(y1 - y2) == 1 ->
@@ -83,7 +95,8 @@ defmodule MazeGenerator.Grid do
       cells: generate_initial_cells(width, height),
       borders: generate_initial_borders(width, height),
       paths: %{},
-      state: state
+      state: state,
+      meta: %{generated: %{algorithm: nil, timestamp: nil}}
     }
   end
 
