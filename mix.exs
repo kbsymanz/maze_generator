@@ -6,12 +6,11 @@ defmodule MazeGenerator.MixProject do
       app: :maze_generator,
       version: "0.1.0",
       description: "Library to generate mazes",
-      licenses: ["MIT"],
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       source_url: "https://github.com/kbsymanz/maze_generator",
-      links: %{"GitHub" => "https://github.com/kbsymanz/maze_generator"}
+      package: package()
     ]
   end
 
@@ -19,6 +18,13 @@ defmodule MazeGenerator.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp package() do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/kbsymanz/maze_generator"}
     ]
   end
 
