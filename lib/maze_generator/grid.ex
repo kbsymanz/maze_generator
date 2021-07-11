@@ -21,14 +21,14 @@ defmodule MazeGenerator.Grid do
           height: pos_integer,
           cells: map(),
           borders: map,
-          paths: map(),
+          ingress_paths: map(),
           state: state,
           meta: map()
         }
 
-  @enforce_keys [:width, :height, :cells, :borders, :paths, :state, :meta]
+  @enforce_keys [:width, :height, :cells, :borders, :ingress_paths, :state, :meta]
 
-  defstruct [:width, :height, :cells, :borders, :paths, :state, :meta]
+  defstruct [:width, :height, :cells, :borders, :ingress_paths, :state, :meta]
 
   @doc """
   Creates a new Grid of the specified dimensions. Initializes the borders as walls
@@ -94,7 +94,7 @@ defmodule MazeGenerator.Grid do
       height: height,
       cells: generate_initial_cells(width, height),
       borders: generate_initial_borders(width, height),
-      paths: %{},
+      ingress_paths: %{},
       state: state,
       meta: %{generated: %{algorithm: nil, timestamp: nil}}
     }

@@ -19,7 +19,7 @@ defmodule MazeGeneratorTest.Grid do
   end
 
   test "A new grid starts with an empty path map" do
-    assert Grid.new(7, 3).paths |> Enum.count() == 0
+    assert Grid.new(7, 3).ingress_paths |> Enum.count() == 0
   end
 
   test "A new grid cannot be created with a width or height of zero or less" do
