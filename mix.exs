@@ -4,7 +4,7 @@ defmodule MazeGenerator.MixProject do
   def project do
     [
       app: :maze_generator,
-      version: "0.1.0",
+      version: "0.2.0",
       description: "Library to generate mazes",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
