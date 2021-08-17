@@ -2,33 +2,35 @@ defmodule MazeGeneratorTest.Grid do
   use ExUnit.Case
   alias MazeGenerator.Grid
 
-  test "Create a grid with populated cells and borders" do
-    w = 3
-    h = 5
-    grid = Grid.new(w, h)
+  describe "Basic grid functionality" do
+    test "Create a grid with populated cells and borders" do
+      w = 3
+      h = 5
+      grid = Grid.new(w, h)
 
-    assert grid.width === w
-    assert grid.height === h
-    assert Map.to_list(grid.borders[:h]) |> Enum.count() == w * (h + 1)
-    assert Map.to_list(grid.borders[:v]) |> Enum.count() == (w + 1) * h
-    assert Map.to_list(grid.cells) |> Enum.count() === w * h
-  end
+      assert grid.width === w
+      assert grid.height === h
+      assert Map.to_list(grid.borders[:h]) |> Enum.count() == w * (h + 1)
+      assert Map.to_list(grid.borders[:v]) |> Enum.count() == (w + 1) * h
+      assert Map.to_list(grid.cells) |> Enum.count() === w * h
+    end
 
-  test "A new grid starts with an uninitialized state" do
-    assert Grid.new(10, 10).state == :uninitialized
-  end
+    test "A new grid starts with an uninitialized state" do
+      assert Grid.new(10, 10).state == :uninitialized
+    end
 
-  test "A new grid starts with an empty path map" do
-    assert Grid.new(7, 3).ingress_paths |> Enum.count() == 0
-  end
+    test "A new grid starts with an empty path map" do
+      assert Grid.new(7, 3).ingress_paths |> Enum.count() == 0
+    end
 
-  test "A new grid cannot be created with a width or height of zero or less" do
-    assert Grid.new(0, 0).state == :invalid_width_height
-    assert Grid.new(1, 0).state == :invalid_width_height
-    assert Grid.new(0, 1).state == :invalid_width_height
-    assert Grid.new(-1, -1).state == :invalid_width_height
-    assert Grid.new(-1, 1).state == :invalid_width_height
-    assert Grid.new(1, -1).state == :invalid_width_height
+    test "A new grid cannot be created with a width or height of zero or less" do
+      assert Grid.new(0, 0).state == :invalid_width_height
+      assert Grid.new(1, 0).state == :invalid_width_height
+      assert Grid.new(0, 1).state == :invalid_width_height
+      assert Grid.new(-1, -1).state == :invalid_width_height
+      assert Grid.new(-1, 1).state == :invalid_width_height
+      assert Grid.new(1, -1).state == :invalid_width_height
+    end
   end
 
   describe "can record the algorithm" do
@@ -44,8 +46,9 @@ defmodule MazeGeneratorTest.Grid do
     end
 
     test "can set the algorithm name and timestamp is set" do
-      grid = Grid.new(10, 10)
-             |> Grid.record_algorithm(:testing)
+      grid =
+        Grid.new(10, 10)
+        |> Grid.record_algorithm(:testing)
 
       assert grid.meta.generated.algorithm === :testing
       assert grid.meta.generated.timestamp !== nil
@@ -88,5 +91,29 @@ defmodule MazeGeneratorTest.Grid do
 
       assert grid.borders === new_grid.borders
     end
+  end
+
+  describe "Carving a path from ingress to egress" do
+    setup do
+      {:ok, grid: Grid.new(10, 10)}
+    end
+
+    test "opens the border for the ingress", %{grid: grid} do
+      new_grid = Grid.populate_paths_from_ingress(grid, {0, 0})
+
+      assert new_grid.borders[:h][{0, 0}] == :passage
+    end
+
+    test "sets the ingress_paths", %{grid: grid} do
+      new_grid = Grid.populate_paths_from_ingress(grid, {0, 0})
+      path = new_grid.ingress_paths[{0, 0}]
+
+      assert path != nil
+      assert path.ingress == {0, 0}
+      assert path.egress != nil
+
+
+    end
+
   end
 end

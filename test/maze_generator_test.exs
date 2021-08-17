@@ -1,5 +1,7 @@
 defmodule MazeGeneratorTest do
   use ExUnit.Case
+  import ExUnit.CaptureIO
+
   doctest MazeGenerator
 
   alias MazeGenerator, as: Mg

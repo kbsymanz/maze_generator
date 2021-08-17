@@ -30,5 +30,14 @@ defmodule MazeGenerator do
 
   def new(_width, _height, _algorithm), do: {:error, "Invalid algorithm specified."}
 
+  @doc """
+  Populate the ingress_paths map in the grid with the longest path from the given
+  ingress.
+  """
+  @spec populate_paths_from_ingress(Grid.t(), {pos_integer, pos_integer}) :: Grid.t()
+  def populate_paths_from_ingress(%Grid{} = grid, {_x, _y} = ingress) do
+    Grid.populate_paths_from_ingress(grid, ingress)
+  end
+
   defp carve(grid, :recursive_backtracker), do: RecursiveBacktracker.carve(grid)
 end

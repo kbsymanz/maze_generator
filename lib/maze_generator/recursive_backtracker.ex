@@ -20,16 +20,18 @@ defmodule MazeGenerator.RecursiveBacktracker do
       ) do
     starting_coordinate = get_random_coordinate(width, height)
 
-    %{grid: grid} = carvep(grid, %{}, starting_coordinate, starting_coordinate)
+    %{grid: grid} = carve_borders(grid, %{}, starting_coordinate, starting_coordinate)
 
-    Grid.record_algorithm(grid, :recursive_backtracker)
+    new_grid = Grid.populate_paths_from_ingress(grid, {0, 0})
+
+    Grid.record_algorithm(new_grid, :recursive_backtracker)
   end
 
   defp get_random_coordinate(width, height) do
     {Enum.random(0..(width - 1)), Enum.random(0..(height - 1))}
   end
 
-  defp carvep(
+  defp carve_borders(
          grid,
          visited,
          {_curr_x, _curr_y} = curr_coordinate,
@@ -54,7 +56,7 @@ defmodule MazeGenerator.RecursiveBacktracker do
                grid: the_grid,
                visited: the_visited
              } ->
-            carvep(the_grid, the_visited, next_coordinate, curr_coordinate)
+            carve_borders(the_grid, the_visited, next_coordinate, curr_coordinate)
           end
         )
     end

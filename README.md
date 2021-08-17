@@ -9,13 +9,12 @@ A maze generation library in Elixir.
 
 - Generates a maze of specified width and height (in cells) using the
   Recursive Backtracker algorithm.
+- Solves by creating an ingress and discovering/opening the furthest egress coordinate in the maze.
 - See [Maze View](https://github.com/kbsymanz/maze_view) for an example
   application that uses the library and outputs SVG.
 
 ## Upcoming Features
 
-- Solver that creates an ingress and egress in the maze between various
-priorities such as longest path, shortest path between specified sides, etc.
 - Different algorithms such as Wilson's, Hunt and Kill, etc.
 
 ## Credits

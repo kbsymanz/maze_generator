@@ -2,6 +2,94 @@ defmodule MazeGeneratorTest.Utils do
   use ExUnit.Case
   alias MazeGenerator.{Grid, Utils}
 
+  describe "Test horizontal_or_vertical_border" do
+    test "adjacent coordinates horizontally have a vertical border" do
+      assert Utils.horizontal_or_vertical_border({1, 1}, {2, 1}) === :v
+    end
+
+    test "adjacent coordinates vertically have a horizontal border" do
+      assert Utils.horizontal_or_vertical_border({1, 1}, {1, 2}) === :h
+    end
+
+    test "adjacent diagonally do not share a border" do
+      assert Utils.horizontal_or_vertical_border({1, 1}, {2, 2}) === nil
+    end
+
+    test "separate do not share a border" do
+      assert Utils.horizontal_or_vertical_border({1, 1}, {5, 5}) === nil
+    end
+  end
+
+  describe "Test open_neighbors" do
+    setup do
+      {:ok, grid: Grid.new(10, 10)}
+    end
+
+    test "uncarved grid has no open neighbors", %{grid: grid} do
+      open = Utils.open_neighbors(grid, {5, 5})
+
+      assert open == []
+    end
+
+    test "horizontal border is a passage", %{grid: grid} do
+      open =
+        grid
+        |> put_in([:borders, :h, {1, 1}], :passage)
+        |> Utils.open_neighbors({1, 0})
+
+      assert ^open = [{1, 1}]
+    end
+
+    test "vertical border is a passage", %{grid: grid} do
+      open =
+        grid
+        |> put_in([:borders, :v, {1, 1}], :passage)
+        |> Utils.open_neighbors({1, 1})
+
+      assert ^open = [{0, 1}]
+    end
+
+    test "open above and below", %{grid: grid} do
+      open =
+        grid
+        |> put_in([:borders, :h, {1, 1}], :passage)
+        |> put_in([:borders, :h, {1, 2}], :passage)
+        |> Utils.open_neighbors({1, 1})
+
+      assert {1, 0} in open
+      assert {1, 2} in open
+      assert length(open) === 2
+    end
+
+    test "open each side", %{grid: grid} do
+      open =
+        grid
+        |> put_in([:borders, :v, {1, 1}], :passage)
+        |> put_in([:borders, :v, {2, 1}], :passage)
+        |> Utils.open_neighbors({1, 1})
+
+      assert {0, 1} in open
+      assert {2, 1} in open
+      assert length(open) === 2
+    end
+
+    test "open all around", %{grid: grid} do
+      open =
+        grid
+        |> put_in([:borders, :h, {5, 5}], :passage)
+        |> put_in([:borders, :h, {5, 6}], :passage)
+        |> put_in([:borders, :v, {5, 5}], :passage)
+        |> put_in([:borders, :v, {6, 5}], :passage)
+        |> Utils.open_neighbors({5, 5})
+
+      assert {4, 5} in open
+      assert {6, 5} in open
+      assert {5, 4} in open
+      assert {5, 6} in open
+      assert length(open) === 4
+    end
+  end
+
   describe "Test neighbors" do
     setup do
       {:ok, grid: Grid.new(10, 10)}
