@@ -2,8 +2,8 @@
 
 A maze generation library in Elixir.
 
-![Example 50 x 30 maze](maze_example.png)
-*An example 50 x 30 maze.*
+![Example 40 x 40 maze](maze_example.png)
+*An example 40 x 40 maze.*
 
 ## Features
 
